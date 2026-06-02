@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PSWProject</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Public/Assets/css/bootstrap.min.css">
+</head>
+
+<style>
+    .option-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%; /* Memastikan tinggi kedua kotak sama */
+    }
+
+    .option-card:hover {
+        transform: translateY(-10px); 
+        box-shadow: 0 1rem 3rem rgba(0,0,0,0.2) !important;
+        cursor: pointer;
+    }
+
+    /* ==========================================
+       BUMBU RESPONSIVE KHUSUS MOBILE (HP)
+       ========================================== */
+    @media (max-width: 768px) {
+        h1.text-success {
+            font-size: 1.8rem; /* Mengecilkan teks sapaan */
+        }
+        .option-card {
+            padding: 1.5rem !important; /* Mengurangi padding dalam kotak */
+        }
+        .option-card h3 {
+            font-size: 1.3rem; /* Mengecilkan judul menu */
+        }
+        .option-card p {
+            font-size: 0.85rem; /* Mengecilkan deskripsi menu */
+        }
+    }
+</style>
+
+<body class="bg-light">
+    <div class="d-flex min-vh-100 justify-content-center align-items-center py-4"> <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-8 mx-auto text-start text-md-center"> <a href="#" id="btnLogout" class="btn btn-outline-dark shadow-sm btn-sm-block">&larr; Return to Login Page?</a>
+                </div>
+            </div>
+            
+            <div class="row mb-4 text-center">
+                <div class="col-12">
+                    <h1 class="text text-success fw-bold">Hello, User!</h1>
+                </div>
+            </div>
+
+            <div class="row text-center" id="option-box">
+                <div class="col-md-8 mx-auto">
+                    <div class="card border-dark shadow-lg">
+                        <div class="card-body p-4"> <div class="row">
+                                <div class="col-md-6 mb-3 mb-md-0"> 
+                                    <a href="booking.html" class="text-decoration-none">
+                                        <div class="card option-card bg-success text-white p-4 shadow border-0">
+                                            <h3>Book Now</h3>
+                                            <p class="mb-0">Reservasi lapangan untuk hari ini</p>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <a href="checkreservation.html" class="text-decoration-none">
+                                        <div class="card option-card bg-success text-white p-4 shadow border-0">
+                                            <h3>Check Reservation</h3>
+                                            <p class="mb-0">Melihat reservasi yang pernah dibuat</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                   
+                </div>  
+            </div>
+        </div>    
+    </div>
+
+    <script>
+        fetch('get_session.php')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.logged_in) {
+                window.location.href = 'index.html';
+            } else {
+                const title = document.querySelector('.text-success');
+                if(title) title.textContent = `Hello, ${data.username}!`;
+            }
+        });
+
+        const btnLogout = document.getElementById('btnLogout');
+            if (btnLogout) {
+                btnLogout.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    if (confirm("Apakah Anda yakin ingin logout?")) {
+                        fetch('logout.php')
+                        .then(response => response.json())
+                        .then(data => {
+                            if(data.status === 'success') {
+                                window.location.href = 'index.html'; 
+                            }
+                        })
+                        .catch(error => console.error('Error logging out:', error));
+                    }
+                });
+            }
+    </script>
+</body>
+</html>
